@@ -1161,7 +1161,52 @@ So the rule is:
 
 **Taste note:** the restraint is the point. Reference `08` and `09` in `docs/inspiration/` are the two strongest references in the folder precisely because they use one effect in one place. Glass on every surface is the iOS 26 equivalent of the 3D blobs in reference `04` — instantly dated, and it would bury the one line that matters.
 
-## 6.6 Quality floor
+## 6.6 Motion
+
+Motion references are `14`–`18` in `docs/inspiration/`. The conclusion from reviewing them is mostly a list of things not to do, and one thing to do properly.
+
+### The count-up animation is forbidden
+
+Reference `15` animates its figures counting up — `$0.00 → $450.00`, `0 → 1,745`. It is the single most common "delightful" finance animation and for this product it is **actively wrong**.
+
+The hero figure is not decoration; it is *the proved result*. Counting up to it means rendering a sequence of **false figures** — `0.00`, `412.31`, `2,891.02` — at the exact moment the app is claiming that number is exactly right. Eight hundred milliseconds of displaying wrong amounts, in an app whose entire thesis is that its amounts are never wrong.
+
+> **Rule: a figure never animates its value.** It may fade or slide in whole. It may never be shown as a number it isn't.
+
+This applies to every amount: the month hero, row amounts, the Proof sheet's two columns, category totals.
+
+### The one hero animation
+
+**The proof strip resolving.** When a gap closes — you import the missing April and March↔May finally links — the strip animates from broken to solid (5.6, 6.1).
+
+That is the only moment in the product that earns a deliberate animation, because it is the only one representing a *state change that actually happened*. Everything else is a view appearing. Make this one good: roughly 0.6s, ease-out, the two broken segments closing toward each other before the fill settles.
+
+### Everything else
+
+| Element | Motion |
+|---------|--------|
+| Sheets (Proof, review, pickers) | Standard SwiftUI presentation. Glass chrome per 6.5 |
+| Row group expand/collapse (the `×6` cluster) | Height + opacity, ~0.25s. No spring overshoot — ledgers don't bounce |
+| List entrance | Optional subtle stagger, ≤50ms apart, ≤0.2s total. **Must never delay reading a figure** |
+| Category bar | Width transition on data change, no entrance sweep |
+| Import progress | Determinate where the page count is known. Never a spinner pretending to be progress |
+
+**Reduce Motion** collapses all of it to a crossfade, including the proof strip — which then changes state instantly, still legible by form alone (solid / dashed / broken, 6.1).
+
+### Rejected outright
+
+- **Glow, bloom, neon edges** (reference `17`) — contradicts flat statement stationery (6.2) and reads as 2021.
+- **Card reveal theatrics** — there is no card in this product.
+- **Illustrated onboarding carousels** (reference `14`) — first screen to first import is two taps (5.1). A five-screen carousel is a different product's problem.
+- **Parallax, tilt, springy overshoot** on rows or figures.
+
+### Worth studying: reference `16` (Apple Wallet / Apple Cash)
+
+The most authoritative reference in the folder, because it is Apple's own financial UI and it is notably restrained: the balance appears, it does not perform. Transactions are a plain list. The chart is flat. The only segmented control is a period selector.
+
+It also uses **merchant logos**, which we've deliberately given up (see `inspiration/README.md`) — worth knowing that even Apple leans on them for scannability, and that our typographic hierarchy has to work harder as a result.
+
+## 6.7 Quality floor
 
 **WCAG 2.1 AA is the floor, not the target.** It's the baseline every regulated finance app is now held to (the European Accessibility Act extended it to digital financial services), and a TestFlight app that can't clear it isn't a portfolio piece.
 

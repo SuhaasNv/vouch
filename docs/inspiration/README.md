@@ -258,6 +258,54 @@ Neither earns a place, for a reason worth stating once so it doesn't get relitig
 
 ---
 
+# Third batch — motion references, 1 Aug 2026 (14–18)
+
+| File | Length | What it is |
+|------|--------|------------|
+| `14-onboarding-carousel-cream.mov` | 16s | Illustrated onboarding carousel, cream palette, page dots |
+| `15-bento-dashboard-countup.mov` | 11s | Bento dashboard, staggered card entrance, **figures counting up** |
+| `16-apple-cash-wallet.mov` | 22s | Apple Cash / Apple Card — Apple's own financial UI |
+| `17-card-reveal-glow.mov` | 8s | Card reveal with a glowing border and blur-in |
+| `18-drag-to-send-device.mov` | 15s | Drag-to-send gesture, filmed on a real device |
+
+Frames extracted with AVFoundation (no ffmpeg needed) — see `SPEC.md` 6.6 for the resulting motion rules.
+
+## The one that matters most is the one to reject
+
+**`15` animates its figures counting up** — `$0.00 → $450.00`, `0 → 1,745`. It's the most common "delightful" finance animation there is, and for Vouch it is **actively wrong**.
+
+The hero figure isn't decoration, it's the *proved result*. Counting up to it renders a sequence of **false figures** — `0.00`, `412.31`, `2,891.02` — at precisely the moment the app claims that number is exactly right. Nearly a second of showing wrong amounts, in the one app whose entire pitch is that its amounts are never wrong.
+
+`SPEC.md` 6.6 makes it a rule: **a figure never animates its value.** It may fade in whole; it may never be shown as a number it isn't.
+
+Take from `15` only the staggered card entrance, and only if it never delays reading a figure.
+
+## `16` — Apple Wallet · the most authoritative reference here
+
+Apple's own financial UI, and notably restrained: **the balance appears, it does not perform.** Transactions are a plain list. The chart is flat. The one segmented control is a period selector (`W / M / 6M / Y / All`).
+
+If Apple doesn't animate a balance in Wallet, that settles the question.
+
+Also worth noting honestly: it leans on **merchant logos** for scannability — the thing we've deliberately given up. Our typographic hierarchy has to work harder to compensate.
+
+## `17` — card reveal with glow · reject entirely
+
+Glowing borders, bloom, blur-in scale. Contradicts flat statement stationery (`SPEC.md` 6.2) and reads as 2021 — the same failure as the 3D blobs in `04`. There is also no card in this product to reveal.
+
+## `14` — onboarding carousel · reject
+
+Five illustrated screens before the app starts. `SPEC.md` 5.1 is two taps from first screen to first import, and we have no illustration style. A carousel here would be a different product's problem.
+
+## `18` — drag-to-send · not applicable
+
+A payments gesture on a physical device. Vouch has no send flow (`SPEC.md` 2.4). The only transferable observation is that filming on a real device shows how motion actually feels at 120Hz in a way a screen recording flattens — worth doing for our own proof-strip animation before calling it done.
+
+## What survives: exactly one hero animation
+
+**The proof strip resolving** — broken to solid when a gap closes and the chain finally links (`SPEC.md` 5.6, 6.6). It is the only moment in the product representing a *state change that actually happened* rather than a view appearing. Everything else is standard SwiftUI presentation, and Reduce Motion collapses all of it to a crossfade.
+
+---
+
 ## Where this lands
 
 The reconciled direction — statement stationery, ditto violet, Paper and Carbon modes — is in `SPEC.md` Part 6. That file is canonical. This one is context for why the tokens look the way they do, and a checklist of what *not* to copy when a screen from one of these kits looks tempting at 1am.
