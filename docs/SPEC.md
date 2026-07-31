@@ -493,8 +493,35 @@ The statement contains full legal name, account number, and an unmasked card num
 **At rest**
 
 - **`.completeFileProtection` on the SwiftData store.** This is not a checkbox — it is AES-256 with a key derived from the device passcode and held in the Secure Enclave, and the file is *cryptographically inaccessible* while the device is locked. It is the strongest at-rest guarantee iOS offers and it comes free.
-- **Biometric gate on launch and on return from background.** `LAContext` with `.deviceOwnerAuthentication` so it falls back to passcode. Financial data behind Face ID is table stakes.
+- **App lock on launch and on return from background** — Face ID with an app PIN fallback. Full design in 3.8.1.
 - The database file is the only persistent artifact. There is no cache, no export directory, no log file.
+
+### 3.8.1 App lock — Face ID, with a PIN set at onboarding
+
+Face ID (or Touch ID) on launch and on return from background. If biometry fails or is unavailable, a **6-digit app PIN** chosen during onboarding.
+
+**Be honest about what this is.** The data's encryption key comes from `.completeFileProtection`, derived from the *device* passcode in the Secure Enclave. The app PIN is a **UI gate layered on top of that**, not the thing encrypting the database. It does not make the file harder to decrypt.
+
+What it genuinely buys: separation from the device passcode. If someone else knows how to unlock your phone — a partner, a family member — the finance app is still shut. That's a real threat model and the reason banking apps all do this. It is not "extra encryption", and the docs should never imply it is.
+
+**Six digits, not four.** Four is 10,000 combinations; six is 1,000,000. The cost to the user is two taps a day. Take the two orders of magnitude.
+
+**Implementation requirements — a hand-rolled PIN is easy to get wrong:**
+
+| Requirement | Why |
+|---|---|
+| Never store the PIN. Store a **PBKDF2-derived hash with a random per-install salt** (CryptoKit), ≥100k iterations | A stored PIN is a stored credential |
+| Keychain item: `.whenUnlockedThisDeviceOnly` | Never syncs to iCloud, never leaves the device |
+| **Exponential backoff** — 1s, 2s, 4s, 8s… after each failure | Without it, 1,000,000 combinations falls in minutes |
+| **Lockout after 10 failures**, clearable only by device-passcode authentication (`LAContext` with `.deviceOwnerAuthentication`) | The Secure Enclave does this for free; we have to build it |
+| Constant-time comparison of the derived hash | Timing side-channel |
+| Attempt counter persisted, not held in memory | Otherwise a force-quit resets it |
+
+**Never** offer a PIN reset that bypasses device authentication. A "forgot PIN" flow that just wipes and re-prompts turns the lock into decoration.
+
+**Onboarding cost, stated:** this adds a screen to the two-tap first run in 5.1 — set PIN, confirm PIN. That's an acceptable trade for a finance app, but it is the *only* screen being added, and it comes after account setup so the user has already seen something real before being asked to invent a number.
+
+**Settings:** allow changing the PIN (requires the current PIN or biometry) and toggling biometry off. **Never allow the lock itself to be disabled** — an unlocked finance app on a shared phone is the failure this exists to prevent.
 
 **The Vault — statements are kept, not discarded**
 

@@ -448,6 +448,26 @@ Had the model been load-bearing anywhere in the pipeline, half the install base 
 
 **Consequence:** `SPEC.md` 6.5 added; former 6.5 renumbered to 6.6.
 
+## D-024 · App lock: Face ID + a 6-digit app PIN — 1 Aug 2026
+
+**Requested:** Face ID to open the app, with a 4–6 digit PIN set during onboarding.
+
+**Decision: build it, at 6 digits, and describe it accurately.**
+
+**What it is not.** The database key is derived from the *device* passcode via `.completeFileProtection` in the Secure Enclave. An app PIN is a **UI gate on top of that**, not a second layer of encryption. It does not make the file harder to decrypt, and no doc or copy may imply otherwise. Overstating a security control is worse than not having it — the user makes decisions based on the claim.
+
+**What it genuinely buys.** Separation from the device passcode. Someone who can unlock the phone — partner, family — still can't open the finance app. That is a real threat model and the reason every banking app does this.
+
+**Six digits, not four.** 10,000 combinations versus 1,000,000. Costs the user two taps a day.
+
+**A hand-rolled PIN is easy to get wrong.** Requirements in `SPEC.md` 3.8.1: PBKDF2-derived hash with a random per-install salt (≥100k iterations, CryptoKit), Keychain `.whenUnlockedThisDeviceOnly`, exponential backoff, lockout after 10 failures clearable only by device authentication, constant-time comparison, and a persisted attempt counter so a force-quit doesn't reset it. Without backoff, a million combinations falls in minutes — the Secure Enclave provides all of this for free and we are reimplementing it.
+
+**No bypass.** A "forgot PIN" flow that wipes and re-prompts makes the lock decoration. Reset requires device-passcode authentication.
+
+**Consequence:** adds one screen to the two-tap onboarding in 5.1 — the only screen added, placed after account setup. Lock cannot be disabled in Settings; biometry can be toggled, the lock cannot.
+
+**This does not reopen D-014.** There is still no account, no OAuth, no server, and nothing to authenticate *to*. This is a local lock on local data.
+
 ---
 
 ## Open — blocking weekend 1

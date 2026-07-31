@@ -300,6 +300,36 @@ Five illustrated screens before the app starts. `SPEC.md` 5.1 is two taps from f
 
 A payments gesture on a physical device. Vouch has no send flow (`SPEC.md` 2.4). The only transferable observation is that filming on a real device shows how motion actually feels at 120Hz in a way a screen recording flattens — worth doing for our own proof-strip animation before calling it done.
 
+# Fourth batch — 1 Aug 2026 (19–21)
+
+| File | Length | What it is |
+|------|--------|------------|
+| `19-defi-wallet-swipe.mov` | 10s | Crypto/DeFi wallet — portfolio hero, swipe between screens |
+| `20-list-expand-dategrid.mov` | 7s | **Light mode.** Compact pill expanding into a date grid, over a dated list |
+| `21-auth-morph-validation.mov` | 24s | Auth panel morphing between steps, inline validation states |
+
+## `20` — the most directly useful animation reference in the folder
+
+Five things, all transferable:
+
+1. **The compact → expanded morph.** A summary pill grows into a full panel, content fading in as it opens, then collapses back. That is exactly the interaction for the collapsed `×6` row group (`SPEC.md` 6.3) and for a Coverage period opening into its detail. **The panel resizes; it does not push a new screen.** Height animates, content crossfades.
+2. **A date grid with one highlighted** (`8…14 / 15…21`) — independently reinforcing the 30-day grid in `09`. Two unrelated apps arriving at the same shape for "period coverage at a glance" is a strong signal for the Coverage screen.
+3. **Date-left, content-right rows** (`Mar 22 · 1-1 Advisory call`) — the ledger row structure, with the date as a distinct left column rather than inline metadata.
+4. **Status carried by distinct glyphs**, not colour alone — check, lock, chevron. Each state gets its own shape. Same principle as the proof strip's solid/dashed/broken (6.1).
+5. **It's light mode**, and we were short of `Paper` references. Note how little it relies on borders: separation comes from spacing and a very subtle fill, not outlines.
+
+## `21` — the morphing panel
+
+Vouch has no auth (`DECISIONS.md` D-014), so the flow itself is inapplicable. **The technique transfers:** a single panel that morphs between steps — height animating, content crossfading — rather than pushing screens. That is the right shape for the import flow (password → parsing → result, `SPEC.md` 5.2) and for the review queue advancing card to card.
+
+Reject its validation styling: the digits go red on invalid and green on valid, with **colour as the only signal.** That fails the rule in 6.7 and we already do better.
+
+## `19` — mostly reject
+
+Crypto/DeFi, teal, 3D avatar. Take one thing: the **delta badge** beside the hero figure (`+0.25% ($7.39) Today`) — the same pattern as `06`, and the shape for month-over-month deltas.
+
+**Useful anti-pattern:** it interrupts the asset list with a promotional card ("Earn More With Our DeFi Strategies"). Vouch has nothing to sell and must never interrupt the ledger with anything that isn't a transaction. Worth naming so it doesn't creep in as a "tip" or "insight" card.
+
 ## What survives: exactly one hero animation
 
 **The proof strip resolving** — broken to solid when a gap closes and the chain finally links (`SPEC.md` 5.6, 6.6). It is the only moment in the product representing a *state change that actually happened* rather than a view appearing. Everything else is standard SwiftUI presentation, and Reduce Motion collapses all of it to a crossfade.
