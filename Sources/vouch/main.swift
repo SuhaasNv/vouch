@@ -1,5 +1,7 @@
 import Foundation
 import VouchCore
+import VouchStore
+import SwiftData
 #if canImport(CryptoKit)
 import CryptoKit
 #endif
@@ -16,6 +18,7 @@ func usage() -> Never {
       vouch prove <statement.pdf> [more.pdf ...]     parse + prove, chain across files
       vouch fixtures <out-dir> <name,...> <pdf ...>  redacted golden fixtures (D-007)
       vouch synth <out-dir>                          synthetic committable fixtures
+      vouch persist <pdf ...>                        parse -> prove -> SwiftData, in memory
     """)
     exit(2)
 }
@@ -168,6 +171,70 @@ case "synth":
         let rows = parsed.sections.reduce(0) { $0 + $1.transactions.count }
         print("wrote \(out.lastPathComponent)  \(parsed.sections.count) section(s), \(rows) rows, all proved")
     }
+
+case "persist":
+    let paths = Array(args.dropFirst())
+    guard !paths.isEmpty else { usage() }
+
+    let container = try ModelContainer.vouch(inMemory: true)
+    let store = VouchStore(modelContainer: container)
+
+    for path in paths.sorted() {
+        let url = URL(fileURLWithPath: path)
+        guard let data = try? Data(contentsOf: url) else { continue }
+        do {
+            let (lines, pages) = try TextLayer.extract(url: url)
+            let statement = try ParsePipeline().parse(
+                lines: lines, sourceHash: sha256(data), pageCount: pages)
+            var proofs: [String: ProofResult] = [:]
+            for s in statement.sections { proofs[s.currency] = ProofEngine.prove(section: s) }
+
+            let outcome = try await store.importStatement(
+                statement, proofs: proofs, fileSizeBytes: data.count)
+            switch outcome {
+            case .imported(let sections, let rows):
+                print("  \(url.lastPathComponent):  \(sections) section(s), \(rows) rows")
+            case .alreadyImported(let when):
+                print("  \(url.lastPathComponent):  already imported \(when) — no changes")
+            case .failed(let why):
+                print("  \(url.lastPathComponent):  \(why)")
+            }
+        } catch {
+            print("  \(url.lastPathComponent): \(error)")
+        }
+    }
+
+    let stamp = DateFormatter()
+    stamp.dateFormat = "MMM yyyy"
+    stamp.locale = Locale(identifier: "en_US_POSIX")
+
+    print("\nPERSISTED LEDGER")
+    print(String(repeating: "-", count: 74))
+    for account in try await store.accounts() {
+        print("account …\(account.last4)  \(account.displayName)")
+    }
+    let all = try await store.statements()
+    for s in all {
+        let chain = switch s.chainState {
+        case .head: "HEAD"
+        case .linked: "LINKED"
+        case .gap: "GAP \(Money.string(s.chainDelta))"
+        case .unknown: "?"
+        }
+        print("  \(stamp.string(from: s.periodEnd))  \(s.currencyCode)  "
+              + "\(s.transactions.count) rows  \(s.proofState.rawValue.uppercased())  \(chain)")
+    }
+
+    let txns = try await store.transactions()
+    let spend = try await store.monthTotal()
+    print("\ntotal transactions persisted: \(txns.count)")
+    print("total debits:                 \(Money.string(spend))")
+    let unreviewed = txns.filter { !$0.isReviewed }.count
+    print("rows needing review:          \(unreviewed)")
+
+    // Every row must be recoverable to the bank's own words (SPEC 1.3).
+    let missingProvenance = txns.filter { $0.sourceLineText.isEmpty || $0.sourcePage == 0 }.count
+    print("rows missing provenance:      \(missingProvenance)")
 
 default:
     usage()

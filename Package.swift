@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(name: "VouchCore", targets: ["VouchCore"]),
         .library(name: "VouchUI", targets: ["VouchUI"]),
+        .library(name: "VouchStore", targets: ["VouchStore"]),
         .executable(name: "vouch", targets: ["vouch"]),
     ],
     targets: [
@@ -22,9 +23,16 @@ let package = Package(
             name: "VouchUI",
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
+        // SwiftData persistence. VouchCore stays free of it — the parser and
+        // proof engine work on value types and know nothing about storage.
+        .target(
+            name: "VouchStore",
+            dependencies: ["VouchCore"],
+            swiftSettings: [.swiftLanguageMode(.v6)]
+        ),
         .executableTarget(
             name: "vouch",
-            dependencies: ["VouchCore"],
+            dependencies: ["VouchCore", "VouchStore"],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         // Renders the component gallery to PNG — reviews the visual system
