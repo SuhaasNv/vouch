@@ -155,6 +155,109 @@ They do establish that PDF statement parsing on iOS is tractable. That's reassur
 
 ---
 
+---
+
+# Second batch — 1 Aug 2026 (06–13)
+
+| File | What it is |
+|------|------------|
+| `06-kalo-nutrition-lime.png` | Kalo — nutrition tracker, dark + lime, stat cards and an Insights row |
+| `07-statistics-donut-dark.png` | Finance statistics screen — donut + pie, category legend |
+| `08-expense-mono-red.png` | Expense tracker — near-monochrome with a single red accent |
+| `09-workout-mono-sheet.mov` | Workout app, 7s screen recording — sheet interaction, 30-day grid |
+| `10-light-vs-dark-visux.png` | The same screen rendered in light and dark, side by side |
+| `11-palette-champion-blue.png` | Palette: Champion Blue `#151130`, Lavender Tonic `#C8BEFA` |
+| `12-typeface-urbanist.png` | Urbanist — geometric sans, Google Fonts |
+| `13-typeface-righterous.png` | Righterous — rounded display face, Google Fonts |
+
+**The headline: the two most useful references in this batch are the two least colourful ones.** `08` and `09` both arrive independently at the discipline `SPEC.md` 6.1 already specifies — near-monochrome, with one accent reserved for the single thing that carries meaning. That is a good sign the "violet means proved" rule is a real principle rather than a personal preference.
+
+## 09 — Workout app recording · **the most useful reference in the whole folder**
+
+Worth extracting frames from rather than skimming. Three things:
+
+**The 30-day grid is the Coverage screen.** Rows of pill shapes: filled = done, hollow = missed, dashed outline = a third state, and exactly one ringed in blue for "today". That is precisely what `SPEC.md` 6.3 Coverage needs — vouched / gap / no-statement-yet, per period, readable in one glance. **Adopt the shape language directly**: form carries the state, colour only marks the current position.
+
+**Colour discipline.** The entire screen is white-on-black except green delta badges (`+2%`, `+36%`) and one blue ring. Nothing else is coloured. This is the same rule as violet-means-proved, executed by someone else, and it looks calm and expensive rather than sparse.
+
+**The sheet-over-content interaction** — a detail sheet rising over a dimmed list, carrying one large figure plus a trend. That's the Proof sheet's motion, already solved.
+
+Reject: the FAB, and the pill/segmented-control chrome.
+
+## 08 — Mono + red expense tracker
+
+Closest in spirit to Vouch of anything here.
+
+**Take**
+- **One accent, used once.** Seven grey bars, one red — the notable day. Directly transferable: our stacked category bar and any future spend chart should be `ink-dim` throughout with `accent` on the one thing worth looking at.
+- **Value labels above the bars** (`$664`, `$280`), so no y-axis is needed. Removes a whole axis of chrome.
+- The `EXPENSE GROUPS` 2×2 grid — amount, percentage, and a small glyph — is a credible layout for the category breakdown if the stacked bar ever needs a companion.
+- Hero `AVAILABLE BALANCE $7953.00` centred above segmented `7 days / Month / Year`.
+
+**Reject**
+- The red as a *brand* colour — it collides with our `debit` token, and a debit-coloured brand in a spending app is a confusing signal.
+- The floating centre FAB.
+
+**One accidental lesson:** the grid shows `Transfers 53%` sitting inside `EXPENSE GROUPS`. That is exactly the mistake `SPEC.md` 3.7 exists to prevent — money moving between your own accounts inflating your spend, and here it is dominating the breakdown. A live example of the bug in a shipped design.
+
+## 06 — Kalo
+
+The best structural reference for **Insights** (`SPEC.md` 9.5), despite being a nutrition app.
+
+**Take**
+- **The `Insights` row of three compact cards** — label, big figure, delta. `Avg. calories 1,420 · ↓180 vs last week` maps one-to-one onto `Groceries $842 · ↑$120 vs last month`. This is the layout for the deterministic insight cards.
+- **Delta badges** — `↓ 8% vs last week` as a pill next to the figure. Clean, and it's the P1 month-over-month feature.
+- Single highlighted bar in the weekly chart (same lesson as `08`).
+- The stat-tile proportion: small dim label, enormous figure, dim trailing unit.
+
+**Reject:** the lime, the glowing streak ring, the macro donut. `SPEC.md` 2.4 rules out donuts and that stands.
+
+## 07 — Statistics screen
+
+Mostly a reject, and useful mainly as a counter-example.
+
+The donut **and** pie together are what `SPEC.md` 6.3 argues against — a pie "lies about small slices", and there are two of them competing. The card mock with a CVV field is fake-credential styling we should never imitate.
+
+**Take exactly one thing:** the legend format — coloured dot, label, percentage, in two columns. That works under our stacked bar.
+
+## 10 — Light vs dark, same screen
+
+Useful as a **method** reference rather than a visual one, and it validates the Paper/Carbon decision.
+
+Note what changes between their two modes: surfaces invert, but the *accent* and the layout do not move at all. Buttons swap fill direction (black-on-white becomes white-on-black) rather than being redesigned. That is the correct discipline and exactly what our semantic token layer buys.
+
+What it also shows by omission: both modes are pure neutral grey. Ours are violet-cast (`#14111C` / `#F4F1EA`) which is warmer and more specific — keep that.
+
+## 11 — Palette reference · **strong validation**
+
+`Champion Blue #151130` is a deep violet-black. Our `surface` in Carbon is `#14111C`. Those are within a hair of each other, arrived at independently — good evidence the violet-cast dark surface reads as considered rather than odd.
+
+`Lavender Tonic #C8BEFA` is lighter than our `accent #9B7DF5`. Measured contrast on a `#151130` field:
+
+| | ratio |
+|---|---|
+| `#C8BEFA` (reference) | 10.6:1 |
+| `#9B7DF5` (our Carbon accent) | 5.9:1 |
+| `#EAE6F2` (our Carbon ink) | 15.2:1 |
+| `#5B3FBF` (our Paper accent) on `#F4F1EA` | 6.4:1 |
+
+All clear the 4.5:1 floor in `SPEC.md` 6.2. **No token change needed.** A lighter accent would read as more "designed", but ours has to sit next to `ink` at 15.2:1 without competing with it — the proof strip should be noticeable, not the brightest thing on screen. Keep `#9B7DF5`.
+
+## 12 & 13 — Typefaces · **recommend against both**
+
+Neither earns a place, for a reason worth stating once so it doesn't get relitigated.
+
+**On iOS, bundling a custom UI font is usually a downgrade.** SF Pro ships with true tabular figures, optical sizing tuned for Apple displays, and full Dynamic Type support for free. A bundled face loses all three unless it is meticulously configured, and `SPEC.md` 6.2 makes tabular figures non-negotiable — this app *is* a column of amounts.
+
+- **Urbanist** — a clean geometric sans. Genuinely nice, but it does nothing SF Pro doesn't do here, and it costs the Dynamic Type and tabular-figure guarantees.
+- **Righterous** — a rounded display face. Actively wrong for this product: rounded geometry reads friendly and casual, and Vouch is selling *certainty*. It would undercut the tone on every screen it touched.
+
+**The one custom face that does earn its place stays Instrument Serif**, and only on the hero figures — because it does something SF cannot: carry statement-stationery authority on the number (`SPEC.md` 6.1). That is a deliberate, single, justified exception. Adding a second one dilutes it.
+
+*(Q6b is still open: verify Instrument Serif holds at 48pt on `Paper`. If it fails dark-on-light, the fallback is a lower-contrast serif — not a sans, and not a per-mode swap.)*
+
+---
+
 ## Where this lands
 
 The reconciled direction — statement stationery, ditto violet, Paper and Carbon modes — is in `SPEC.md` Part 6. That file is canonical. This one is context for why the tokens look the way they do, and a checklist of what *not* to copy when a screen from one of these kits looks tempting at 1am.
