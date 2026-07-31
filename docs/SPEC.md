@@ -950,11 +950,35 @@ Rules:
 
 | Role | Face | Setting |
 |------|------|---------|
-| Figures — hero | Instrument Serif | 48/52, tabular figures on |
-| Figures — rows | SF Mono | 15, tabular, right-aligned |
+| Figures — hero | Instrument Serif | 48/52, `.custom(_:size:relativeTo:.largeTitle)` |
+| **Figures — rows** | **SF Pro Text + `.monospacedDigit()`** | 15, right-aligned. **Not SF Mono** — see below |
 | Body / UI | SF Pro Text | 15/22 |
 | Eyebrow / labels | SF Pro Text | 11, uppercase, tracking +0.08em |
 | Source line (provenance) | SF Mono | 12, `rule` colour, never wrapped — scrolls horizontally |
+
+### Tabular figures ≠ a monospaced font
+
+*Corrected 1 Aug 2026. v0.2 specified SF Mono for row figures. That was wrong.*
+
+What a ledger needs is **tabular figures** — every digit the same advance width, so decimal points align down a column. It does **not** need a monospaced *font*, which also forces every letter to the same width.
+
+Rendered side by side on real merchant names, SF Mono monospaces `LE TACH VENDING` and `NTUC FP - TAMPINES HUB` as well as the amounts. The result reads as terminal output. SF Pro Text with `.monospacedDigit()` aligns the figures just as precisely while leaving merchant names proportional and properly readable.
+
+**Actual bank statements are set in proportional type with tabular figures.** That is the texture to match. Apple Wallet does the same (reference `16`).
+
+`.monospacedDigit()` is the whole implementation — SF Pro ships tabular numerals, so this costs nothing and keeps Dynamic Type and optical sizing intact.
+
+**SF Mono keeps exactly one job:** the provenance source line, where a machine-output texture is *correct* because that is literally what it is — the raw line the parser read.
+
+### Instrument Serif — three requirements
+
+It is the one bundled face, justified because it does something SF cannot: carry statement authority on the hero figure (6.1). Bundling it costs three things that must be handled explicitly:
+
+1. **Dynamic Type is not automatic.** Use `.custom(_:size:relativeTo:)` so it scales with the user's setting. A bundled font declared with a fixed size ignores Dynamic Type entirely and fails 6.7.
+2. **Verify it has tabular figures** before committing to it. Many display serifs don't. Without them the hero figure shifts horizontally when the month total changes — less damaging here than in a column, and mitigated by the ban on value animation (6.6), but check.
+3. **One weight only** (regular, plus italic). Fine for a single hero figure; do not plan any design that needs a bold cut of it.
+
+If it fails the `Paper` legibility check in Part 8 Q6b, the fallback is **a lower-contrast serif — not a sans, and not a per-mode swap.** The serif is carrying the concept, not the decoration.
 
 Tabular figures are non-negotiable — proportional digits make a column of amounts unreadable, and this app is a column of amounts. Worth knowing: **no major banking app currently uses tabular digits**, per the transaction-list teardown in `docs/inspiration/README.md`. It is a one-line fix that visibly beats Monzo, Starling and Revolut at their own core screen. Take the free win.
 

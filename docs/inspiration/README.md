@@ -245,16 +245,38 @@ All clear the 4.5:1 floor in `SPEC.md` 6.2. **No token change needed.** A lighte
 
 ## 12 & 13 — Typefaces · **recommend against both**
 
-Neither earns a place, for a reason worth stating once so it doesn't get relitigated.
+Rated against the type system in `SPEC.md` 6.2, not in the abstract.
 
-**On iOS, bundling a custom UI font is usually a downgrade.** SF Pro ships with true tabular figures, optical sizing tuned for Apple displays, and full Dynamic Type support for free. A bundled face loses all three unless it is meticulously configured, and `SPEC.md` 6.2 makes tabular figures non-negotiable — this app *is* a column of amounts.
+### The rule these fail
 
-- **Urbanist** — a clean geometric sans. Genuinely nice, but it does nothing SF Pro doesn't do here, and it costs the Dynamic Type and tabular-figure guarantees.
-- **Righterous** — a rounded display face. Actively wrong for this product: rounded geometry reads friendly and casual, and Vouch is selling *certainty*. It would undercut the tone on every screen it touched.
+**On iOS, bundling a custom UI font is usually a downgrade.** SF Pro ships true tabular figures, optical sizing tuned for Apple displays, and Dynamic Type for free. A bundled face loses all three unless meticulously wired up — and this app *is* a column of amounts.
 
-**The one custom face that does earn its place stays Instrument Serif**, and only on the hero figures — because it does something SF cannot: carry statement-stationery authority on the number (`SPEC.md` 6.1). That is a deliberate, single, justified exception. Adding a second one dilutes it.
+### `12` Urbanist — a good font, wrong job
 
-*(Q6b is still open: verify Instrument Serif holds at 48pt on `Paper`. If it fails dark-on-light, the fallback is a lower-contrast serif — not a sans, and not a per-mode swap.)*
+A clean geometric sans, well made, and it does have tabular figures. It still fails on two counts:
+
+- **It replaces SF Pro Text and gains nothing.** Everything it does well here, SF Pro already does, while also giving Dynamic Type without `UIFontMetrics` plumbing.
+- **Geometric sans is a poor fit for figures specifically.** In geometric faces the `1` tends to a bare stem and the `0` toward a perfect circle — which is exactly where a glanced `1,058.57` gets misread. SF Pro's digits are drawn for glanceability, and this app is glanced constantly.
+
+### `13` Righterous — actively wrong
+
+A rounded display face. Three problems, any one disqualifying:
+
+- **Rounded terminals read friendly and casual.** Vouch sells *certainty*. It would undercut the tone on every screen it touched.
+- **It is a display face**, drawn for headlines, not for text at 15pt.
+- Almost certainly no tabular figures — which `SPEC.md` 6.2 makes non-negotiable.
+
+### What the spec actually uses, and a correction these prompted
+
+Reviewing the references against 6.2 surfaced a mistake in the spec itself: **row figures were specified as SF Mono. That was wrong**, and it's now corrected.
+
+A ledger needs **tabular figures**, not a monospaced *font*. SF Mono monospaces `NTUC FP - TAMPINES HUB` along with the amounts, and the result reads as terminal output. **SF Pro Text with `.monospacedDigit()`** aligns the figures identically while keeping merchant names proportional and readable. Real bank statements are proportional type with tabular figures; so is Apple Wallet (`16`).
+
+SF Mono keeps one job: the provenance source line, where a machine-output texture is correct because that is exactly what it is.
+
+**The one bundled face stays Instrument Serif**, hero figures only — it does what SF cannot, carrying statement authority on the number (6.1). A single, justified exception; a second one dilutes it. It now carries three explicit requirements in 6.2: `relativeTo:` for Dynamic Type, verify its tabular figures, and accept that it has only one weight.
+
+*(Q6b still open: does it hold at 48pt on `Paper`? If not, the fallback is a lower-contrast serif — not a sans, and not a per-mode swap.)*
 
 ---
 
