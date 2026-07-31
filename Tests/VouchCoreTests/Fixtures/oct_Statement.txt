@@ -1,0 +1,43 @@
+### PAGE 1
+Transaction Details
+as at 31 Oct 2025
+My Account (XXXXXXXXX) Account No. 000-000000-0
+Date Description Withdrawal (-) Deposit (+) Balance
+CURRENCY: SINGAPORE DOLLAR
+03/10/2025 Balance Brought Forward SGD 309.98
+03/10/2025 Debit Card Transaction
+MERIDIAN COFFEE HOUSE SI SGP 01OCT
+0000-0000-0000-0000
+7.30 302.68
+08/10/2025 Debit Card Transaction
+HARBOURSIDE GROCERS SI SGP 06OCT
+0000-0000-0000-0000
+52.40 250.28
+14/10/2025 Debit Card Transaction
+CITY TRANSIT NETWORK SI SGP 12OCT
+0000-0000-0000-0000
+2.20 248.08
+19/10/2025 Debit Card Transaction
+LANTERN NOODLE BAR SI SGP 17OCT
+0000-0000-0000-0000
+16.75 231.33
+25/10/2025 Debit Card Transaction
+ORCHID BOOKSHOP SI SGP 23OCT
+0000-0000-0000-0000
+21.30 210.03
+Balance Carried Forward SGD 210.03
+Total Balance Carried Forward in SGD: 99.95 0.00 210.03
+Transaction Details as of 31 Oct 2025
+### PAGE 1
+Transaction Details
+as at 31 Oct 2025
+My Account (XXXXXXXXX) Account No. 000-000000-0
+Date Description Withdrawal (-) Deposit (+) Balance
+CURRENCY: SINGAPORE DOLLAR
+15/10/2025 Balance Brought Forward USD 0.00
+15/10/2025 Advice
+INBOUND TRANSFER SI SGP 13OCT
+196.20 196.20
+Balance Carried Forward USD 196.20
+Total Balance Carried Forward in USD: 0.00 196.20 196.20
+Transaction Details as of 31 Oct 2025

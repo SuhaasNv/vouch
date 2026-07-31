@@ -1,0 +1,67 @@
+# ─────────────────────────────────────────────────────────────
+# REAL FINANCIAL DOCUMENTS — NEVER COMMIT
+# These contain full legal name, account number, and an unmasked
+# card number on every debit-card row. See docs/DECISIONS.md D-007.
+# Golden fixtures go in Tests/Fixtures/ and MUST be redacted first.
+# ─────────────────────────────────────────────────────────────
+statements_suhaas/
+*Statement.pdf
+*statement*.pdf
+transaction_history*.pdf
+*.eStatement.pdf
+
+# Extracted intermediates — these contain the same PII as the source
+*.extracted.txt
+*.extracted.json
+scratch/
+
+# Screenshots of statements — same PII as the PDFs.
+IMG_*.PNG
+IMG_*.png
+**/statement*screenshot*
+
+# Third-party UI reference kits and recordings. Kept locally, not
+# redistributed — docs/inspiration/README.md is self-sufficient without them.
+# Screen recordings are excluded on principle: they capture whatever else
+# was on screen.
+docs/inspiration/*.png
+docs/inspiration/*.jpg
+docs/inspiration/*.jpeg
+docs/inspiration/*.gif
+docs/inspiration/*.mov
+docs/inspiration/*.mp4
+*.mov
+*.mp4
+
+# Local agent build rules — kept out of the public repo by choice.
+# docs/HANDOFF.md §4 carries the same non-negotiables and is self-sufficient.
+CLAUDE.md
+
+# ─────────────────────────────────────────────────────────────
+# Swift Package Manager
+# ─────────────────────────────────────────────────────────────
+.build/
+.swiftpm/
+Package.resolved
+*.o
+*.dia
+
+# ─────────────────────────────────────────────────────────────
+# Xcode
+# ─────────────────────────────────────────────────────────────
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+DerivedData/
+build/
+.swiftpm/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# ─────────────────────────────────────────────────────────────
+# macOS
+# ─────────────────────────────────────────────────────────────
+.DS_Store
