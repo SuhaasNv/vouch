@@ -103,6 +103,24 @@ struct CoverageScreen: View {
     }
 }
 
+/// What the user actually asked for: upload → expenses, with a category chart.
+struct ExpensesScreen: View {
+    let mode: VouchMode
+    var body: some View {
+        VStack(alignment: .leading, spacing: Space.l) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("July 2026").vouchEyebrow().foregroundStyle(VouchTheme.of(mode).inkDim)
+                Text("Where your money went").font(.system(size: 22))
+                    .foregroundStyle(VouchTheme.of(mode).ink)
+            }
+            PieChart(slices.map { .init(category: $0.category, amount: $0.amount) })
+        }
+        .padding(Space.gutter)
+        .frame(width: 375, alignment: .leading)
+        .vouchTheme(mode)
+    }
+}
+
 struct PartsScreen: View {
     let mode: VouchMode
     var body: some View {
@@ -174,7 +192,10 @@ MainActor.assumeIsolated {
                      "\(out)/screen-ledger-\(mode.rawValue).png", height: 1180)
         renderHosted(CoverageScreen(mode: mode),
                      "\(out)/screen-coverage-\(mode.rawValue).png", height: 620)
-        render(PartsScreen(mode: mode), "\(out)/screen-parts-\(mode.rawValue).png")
+        // Hosted, not ImageRenderer — the provenance well is a horizontal
+        // ScrollView and renders empty otherwise.
+        renderHosted(PartsScreen(mode: mode), "\(out)/screen-parts-\(mode.rawValue).png", height: 500)
+        renderHosted(ExpensesScreen(mode: mode), "\(out)/screen-expenses-\(mode.rawValue).png", height: 660)
     }
     renderHosted(LedgerScreen(mode: .carbon, showBalance: true),
                  "\(out)/screen-ledger-reconcile.png", height: 1180)

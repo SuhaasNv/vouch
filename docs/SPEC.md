@@ -955,7 +955,7 @@ Rules:
 | **Figures — rows** | **SF Pro Text + `.monospacedDigit()`** | 15, right-aligned. **Not SF Mono** — see below |
 | Body / UI | SF Pro Text | 15/22 |
 | Eyebrow / labels | SF Pro Text | 11, uppercase, tracking +0.08em |
-| Source line (provenance) | SF Mono | 12, `rule` colour, never wrapped — scrolls horizontally |
+| Source line (provenance) | SF Mono | 12, **`ink` on `surface-sunken`**, never wrapped — scrolls horizontally |
 
 ### Tabular figures ≠ a monospaced font
 
@@ -970,6 +970,12 @@ Rendered side by side on real merchant names, SF Mono monospaces `LE TACH VENDIN
 `.monospacedDigit()` is the whole implementation — SF Pro ships tabular numerals, so this costs nothing and keeps Dynamic Type and optical sizing intact.
 
 **SF Mono keeps exactly one job:** the provenance source line, where a machine-output texture is *correct* because that is literally what it is — the raw line the parser read.
+
+> **Correction, 1 Aug 2026.** v0.2 specified that line in `rule` colour. Measured, `rule` on `surface` is **1.28:1 in Carbon and 1.36:1 in Paper** — against a 4.5:1 floor in 6.7. It was unreadable, not subtle.
+>
+> The source line is *the evidence*. It takes `ink` on a `surface-sunken` well (15.8:1 / 13.7:1). Dimming the one element that proves the app isn't lying was exactly the wrong instinct.
+>
+> `rule` is the hairline token. It is for hairlines. Never for text.
 
 ### Q6b resolved — measured, not argued (D-027)
 
