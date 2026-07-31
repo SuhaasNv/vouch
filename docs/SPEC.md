@@ -1121,7 +1121,47 @@ This is the screen you'll spend the most time in during month one and almost non
 - Never say "we couldn't verify." Say which check failed and by how much.
 - A gap is stated as a fact, not an accusation: "April missing. Δ 1,880.20." Not "You forgot to import April."
 
-## 6.5 Quality floor
+## 6.5 Liquid Glass — navigation only, never content
+
+**Availability, verified 1 Aug 2026:** Liquid Glass shipped in **iOS 26**, not 27. `.glassEffect()`, `GlassEffectContainer`, `.buttonStyle(.glass)` and `.glassEffectID(_:in:)` all compile against the iOS 26.5 SDK already installed. Nothing here waits on a future OS, and the deployment target stays iOS 26 (`DECISIONS.md` D-023).
+
+### The tension, stated plainly
+
+Glass is about depth, translucency and refraction. Vouch's design language is flat statement stationery — hairline rules, no shadows, no elevation (6.2 Layout). Applied to content, glass would dissolve the paper metaphor completely and make the app look like every other iOS 26 redesign.
+
+Apple's own layer model resolves it, and the resolution happens to be exactly what this product wants:
+
+> **Glass belongs to the navigation layer — things that float *above* content. Content stays opaque.**
+
+So the rule is:
+
+| Layer | Material |
+|-------|----------|
+| **Navigation** — toolbar, month picker, floating `Import` / `+`, sheet chrome, tab bar | **Glass** |
+| **Content** — transaction rows, figures, hairline rules, the category bar, the Proof sheet's table | **Opaque paper. Never glass.** |
+
+### Where it earns its place
+
+- **The floating action pair** (`+` and `Import`). Grouped in a `GlassEffectContainer` so they blend as one material instead of two stacked panes, with `.glassEffect(.regular.interactive())` for the press response.
+- **The toolbar and month picker**, so the ledger scrolls beneath them — which is what glass is *for*, and it reinforces that the ledger is a continuous document (6.3).
+- **The Proof sheet rising over the ledger.** This is the one place glass carries meaning rather than decoration: it says *this is a temporary layer above your data*, which is true. Reference `09-workout-mono-sheet.mov` in `docs/inspiration/` shows the motion.
+
+### Where it is forbidden
+
+- **The proof strip. Never.** It is the product's entire thesis rendered as one line (6.1), and its legibility is load-bearing. A translucent verdict is a hedged verdict.
+- **Any amount, anywhere.** Figures sit on opaque surfaces so the contrast floor in 6.6 is a fixed guarantee, not a function of what happens to be scrolling underneath.
+- **Transaction rows.** They are ruled paper. Rules and glass are contradictory metaphors.
+
+### Non-negotiable conditions
+
+1. **Honour Reduce Transparency.** When it's on, every glass surface becomes opaque `surface-raised`. Check `accessibilityReduceTransparency`; do not ship glass as the only path.
+2. **Contrast is measured over the worst case.** Glass takes its colour from what's behind it, and a ledger scrolling underneath is not a fixed background. If any text over glass can drop below 4.5:1, it goes on an opaque surface instead. The floor in 6.6 is not negotiable for a material choice.
+3. **Use `GlassEffectContainer` whenever two glass elements are near each other.** Independent glass views stack and muddy; a container merges them into one material.
+4. **Both modes.** Glass reads very differently on `Paper` than on `Carbon` — verify both at 375pt.
+
+**Taste note:** the restraint is the point. Reference `08` and `09` in `docs/inspiration/` are the two strongest references in the folder precisely because they use one effect in one place. Glass on every surface is the iOS 26 equivalent of the 3D blobs in reference `04` — instantly dated, and it would bury the one line that matters.
+
+## 6.6 Quality floor
 
 **WCAG 2.1 AA is the floor, not the target.** It's the baseline every regulated finance app is now held to (the European Accessibility Act extended it to digital financial services), and a TestFlight app that can't clear it isn't a portfolio piece.
 

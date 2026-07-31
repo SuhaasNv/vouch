@@ -424,6 +424,30 @@ Had the model been load-bearing anywhere in the pipeline, half the install base 
 
 **Do not reach for a cloud LLM to close the gap on the iPhone 15.** D-009's PDPA and zero-network reasoning is unchanged, and the degraded path is a handful of missing conveniences, not a broken product.
 
+## D-023 · Liquid Glass on the navigation layer only — 1 Aug 2026
+
+**Premise corrected:** Liquid Glass shipped in **iOS 26**, not iOS 27. Verified by compiling `.glassEffect()`, `GlassEffectContainer`, `.buttonStyle(.glass)` and `.glassEffectID(_:in:)` against the installed iOS 26.5 SDK — all fine. No iOS 27 SDK is installed and none is needed. **Deployment target stays iOS 26**; raising it to 27 would exclude devices for no gain, and the iPhone 15 in D-022 runs 26.
+
+**The conflict:** glass is depth, translucency and refraction. Vouch is flat statement stationery — hairline rules, no shadows, no elevation (`SPEC.md` 6.2). Glass on content would dissolve the paper metaphor and make the app indistinguishable from every other iOS 26 redesign.
+
+**Decision — adopt Apple's own layer split, which happens to be exactly what this product needs:**
+
+| Layer | Material |
+|-------|----------|
+| Navigation — toolbar, month picker, floating `Import`/`+`, sheet chrome | **Glass** |
+| Content — rows, figures, hairline rules, category bar, Proof table | **Opaque. Never glass** |
+
+**Forbidden outright:**
+- **The proof strip.** Its legibility is load-bearing; a translucent verdict is a hedged verdict.
+- **Any amount.** Figures sit on opaque surfaces so the 4.5:1 floor is a fixed guarantee rather than a function of whatever is scrolling underneath.
+- **Transaction rows** — ruled paper and glass are contradictory metaphors.
+
+**Conditions:** honour `accessibilityReduceTransparency` with an opaque fallback; measure contrast against the worst-case backdrop, not a still screenshot; wrap adjacent glass elements in `GlassEffectContainer` so they merge rather than stack; verify in both Paper and Carbon.
+
+**Where it genuinely earns its place:** the Proof sheet rising over the ledger. There, translucency *means* something — this is a temporary layer above your data — rather than being decoration.
+
+**Consequence:** `SPEC.md` 6.5 added; former 6.5 renumbered to 6.6.
+
 ---
 
 ## Open — blocking weekend 1
