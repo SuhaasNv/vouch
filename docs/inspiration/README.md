@@ -336,6 +336,60 @@ Crypto/DeFi, teal, 3D avatar. Take one thing: the **delta badge** beside the her
 
 ---
 
+## `22-meditation-glass-warm.png` — the best glass in the folder, and a warning
+
+Warm sage panels over photography. It is the most convincing **Liquid Glass** execution here, and it teaches one specific thing relevant to `SPEC.md` 6.5:
+
+**Glass looks like this only because there is something rich behind it.** Blurred petals, warm gradients, a photograph. Glass works by refracting and sampling its backdrop — give it colour and depth and it glows; give it a flat surface and it has nothing to work with.
+
+**Vouch's glass will sit over a flat ledger.** It will read as a subtle frosted layer, not this. That is the correct outcome and the expectation should be set now, before someone tries to add a gradient behind the toolbar to "make the glass pop" — which would be adding decoration to justify a material, exactly backwards.
+
+Otherwise reject: photography, warm palette, and the soft-wellness tone. Vouch is a document, not a mood.
+
+---
+
+# Rating the collection
+
+Rated on **usefulness to Vouch specifically**, not general quality. Several excellent designs rank low simply because they solve a different problem.
+
+### S — directly shaped a decision
+
+| Ref | What it gave |
+|-----|-------------|
+| `09-workout-mono-sheet.mov` | The Coverage grid, the one-accent discipline, and the sheet-over-content motion. Best in folder |
+| `20-list-expand-dategrid.mov` | The compact→expanded morph, a second independent coverage grid, status-by-glyph, and a rare light-mode reference |
+| `16-apple-cash-wallet.mov` | Apple's own financial UI. Settled "never animate a balance" by authority rather than argument |
+| `08-expense-mono-red.png` | One accent used once, value labels instead of an axis — plus an accidental live example of Transfers inflating spend |
+
+### A — contributed something concrete
+
+`11-palette-champion-blue.png` (independently validated the violet-black surface) · `06-kalo-nutrition-lime.png` (the Insights card row) · `15-bento-dashboard-countup.mov` (**valuable precisely as the thing to reject** — produced the strongest motion rule in the spec) · `10-light-vs-dark-visux.png` (dual-mode method) · `01-smarta-fintech-green.png` (list density, hero card weight)
+
+### B — one usable idea each
+
+`05` expense/income side-by-side figures · `21` the morphing panel between steps · `02` stat-tile proportions · `22` glass needs a rich backdrop
+
+### C — mostly reject, one salvage
+
+`04` the violet range only, the 3D blobs are the anti-pattern · `07` the legend format only · `19` the delta badge, plus a useful anti-pattern (never interrupt the ledger to sell something) · `03` detail-screen structure · `18` "film it on a real device before calling motion done"
+
+### D — no value here
+
+`12` and `13` typefaces (recommend against both — a bundled UI face costs tabular figures and Dynamic Type) · `14` illustrated onboarding carousel (wrong product shape) · `17` glow card reveal (actively harmful direction)
+
+## The pattern in the ratings
+
+**Every S-tier reference is either near-monochrome or Apple's own. Every D-tier one is decorative.**
+
+That is not coincidence. Vouch sells *certainty*, and certainty does not look like energy. The references that helped are the ones whose designers had already made that trade; the ones that didn't are selling excitement, correctly, for a different product.
+
+## What the collection is missing
+
+Two gaps worth filling if more references get added:
+
+1. **Light-mode references.** Only `20` and `10`. `Paper` is arguably the more honest mode for this product — a statement is dark ink on light paper — and it currently has the thinner reference set.
+2. **Anything from the document tradition.** Every reference here is an *app*. Vouch's design language comes from statement stationery, ledgers, and printed financial documents. Photographs of actual bank statements, ledger paper, or well-set financial tables would be worth more at this point than another dark fintech dashboard.
+
 ## Where this lands
 
 The reconciled direction — statement stationery, ditto violet, Paper and Carbon modes — is in `SPEC.md` Part 6. That file is canonical. This one is context for why the tokens look the way they do, and a checklist of what *not* to copy when a screen from one of these kits looks tempting at 1am.
