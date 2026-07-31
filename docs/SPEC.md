@@ -950,7 +950,7 @@ Rules:
 
 | Role | Face | Setting |
 |------|------|---------|
-| Figures — hero | Instrument Serif | 48/52, `.custom(_:size:relativeTo:.largeTitle)` |
+| Figures — hero | **System serif (New York)** | 48/52. See below — Q6b resolved 1 Aug 2026 |
 | **Figures — rows** | **SF Pro Text + `.monospacedDigit()`** | 15, right-aligned. **Not SF Mono** — see below |
 | Body / UI | SF Pro Text | 15/22 |
 | Eyebrow / labels | SF Pro Text | 11, uppercase, tracking +0.08em |
@@ -970,9 +970,26 @@ Rendered side by side on real merchant names, SF Mono monospaces `LE TACH VENDIN
 
 **SF Mono keeps exactly one job:** the provenance source line, where a machine-output texture is *correct* because that is literally what it is — the raw line the parser read.
 
-### Instrument Serif — three requirements
+### The hero serif — Q6b resolved in favour of the system face
 
-It is the one bundled face, justified because it does something SF cannot: carry statement authority on the hero figure (6.1). Bundling it costs three things that must be handled explicitly:
+**Rendered at 48pt in both modes and it holds.** The worry was that a high-contrast display serif would go thin and weak dark-on-light. The system serif (New York) doesn't, because it's a *text* serif with moderate stroke contrast.
+
+Default to it. **Instrument Serif now has to prove it's better before being bundled**, against a face that costs nothing and can't be misconfigured:
+
+| | System serif | Bundled face |
+|---|---|---|
+| Dynamic Type | Free | Needs `relativeTo:` wiring |
+| Tabular figures | Guaranteed | Must be verified |
+| Weights | Full range | Instrument Serif has one |
+| Bundle size | Zero | ~100 KB+ |
+
+`VouchType.heroSerifName` is `nil`, which selects the system serif. Setting it to a bundled family name is a one-line change.
+
+**The concept is unchanged** — a serif on the *figures*, not the headlines (6.1). Only the specific face is now open.
+
+### If a face ever is bundled — three requirements
+
+Justified only if it does something the system serif cannot. Bundling costs three things that must be handled explicitly:
 
 1. **Dynamic Type is not automatic.** Use `.custom(_:size:relativeTo:)` so it scales with the user's setting. A bundled font declared with a fixed size ignores Dynamic Type entirely and fails 6.7.
 2. **Verify it has tabular figures** before committing to it. Many display serifs don't. Without them the hero figure shifts horizontally when the month total changes — less damaging here than in a column, and mitigated by the ban on value animation (6.6), but check.
@@ -1031,7 +1048,24 @@ Tabular figures are non-negotiable — proportional digits make a column of amou
 └──────────────────────────────────────┘
 ```
 
-**The balance column ships in the UI.** It mirrors the source document, so the app's list can be checked against the paper statement line by line, by eye. That is the most on-thesis thing in the product — and it costs one column. Dim it (`ink-dim`) so the amount still leads.
+**The balance column is a mode, not a fixture.** *(Corrected 1 Aug 2026 by building it — D-025.)*
+
+It mirrors the source document so the list can be checked against the paper statement line by line, which is the most on-thesis thing in the product. But the arithmetic at 375pt doesn't allow it permanently:
+
+```
+375 − 40 gutters − 46 date − 92 amount − 78 balance − spacing ≈ 45pt for the merchant
+```
+
+45pt truncates `SHENG SIONG` to `SH…`. **A ledger you can't read the merchants in is worse than one you can't eyeball-reconcile.**
+
+So there are two reading postures, toggled from the toolbar — not buried in Settings, because it's a posture rather than a preference:
+
+| Mode | Columns | For |
+|------|---------|-----|
+| **Reading** (default) | date · merchant · amount | Scanning the month |
+| **Reconcile** | date · merchant · amount · balance | Checking against the paper statement |
+
+Merchants truncate in Reconcile mode, and that's correct — when you're matching against paper you're reading *figures*, not names. Dim the balance (`ink-dim`) so the amount still leads.
 
 **Repeated rows collapse into groups.** Real measurement across 499 transactions: **28% of all rows are ~SGD 0.50 vending purchases worth 1.8% of the money** (D-016). An honest one-row-per-transaction list is unreadable.
 
