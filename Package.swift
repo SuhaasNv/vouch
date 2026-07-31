@@ -6,6 +6,7 @@ let package = Package(
     platforms: [.macOS(.v14), .iOS(.v18)],
     products: [
         .library(name: "VouchCore", targets: ["VouchCore"]),
+        .library(name: "VouchUI", targets: ["VouchUI"]),
         .executable(name: "vouch", targets: ["vouch"]),
     ],
     targets: [
@@ -14,9 +15,23 @@ let package = Package(
             name: "VouchCore",
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
+        // Design system. No hex or mode reaches a component — everything
+        // resolves through VouchTheme, which is what makes two colour modes
+        // cost an hour instead of a weekend.
+        .target(
+            name: "VouchUI",
+            swiftSettings: [.swiftLanguageMode(.v6)]
+        ),
         .executableTarget(
             name: "vouch",
             dependencies: ["VouchCore"],
+            swiftSettings: [.swiftLanguageMode(.v6)]
+        ),
+        // Renders the component gallery to PNG — reviews the visual system
+        // without a Simulator.
+        .executableTarget(
+            name: "vouch-gallery",
+            dependencies: ["VouchUI"],
             swiftSettings: [.swiftLanguageMode(.v6)]
         ),
         .testTarget(

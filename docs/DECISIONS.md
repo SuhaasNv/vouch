@@ -468,6 +468,41 @@ Had the model been load-bearing anywhere in the pipeline, half the install base 
 
 **This does not reopen D-014.** There is still no account, no OAuth, no server, and nothing to authenticate *to*. This is a local lock on local data.
 
+## D-025 · The balance column is a mode, not a fixture — 1 Aug 2026
+
+**Found by building it.** `SPEC.md` 6.3 says the balance column ships in the UI because it mirrors the source document and lets the list be checked against the paper statement line by line. Rendered at 375pt, the arithmetic doesn't work:
+
+```
+375 − 40 gutters − 46 date − 92 amount − 78 balance − spacing ≈ 45pt for the merchant
+```
+
+45pt truncates `SHENG SIONG` to `SH…`. **A ledger you can't read the merchants in is worse than one you can't eyeball-reconcile.**
+
+**Decision: `showBalance` defaults off.** Reading mode omits the balance and merchants get ~180pt. Reconcile mode turns it on and accepts truncated merchants — which is fine, because when you're matching against paper you're reading *figures*, not names.
+
+Verified by rendering both variants side by side (`vouch-gallery`). The tradeoff is real in both directions, which is exactly why it's a toggle rather than a decision made once for everyone.
+
+**Consequence:** `SPEC.md` 6.3 needs the mode noted. The toggle belongs in the toolbar, not buried in Settings — it's a reading posture, not a preference.
+
+## D-026 · Q6b resolved — the system serif clears the bar — 1 Aug 2026
+
+**What I checked:** rendered `SGD 3,412.80` and `1,008.75` at 48pt in both Paper and Carbon using the system serif (New York), via `ImageRenderer` at 2× — no Simulator required.
+
+**Result: it holds up in both modes.** The concern behind Q6b was that a high-contrast display serif would go thin and weak dark-on-light. New York doesn't, because it's a *text* serif with moderate stroke contrast, not a display face.
+
+**Recommendation: default to the system serif, and make Instrument Serif prove it's better before bundling it.** The system face wins on three counts that aren't close:
+
+| | System serif (New York) | Instrument Serif |
+|---|---|---|
+| Dynamic Type | Free | Needs `relativeTo:` wiring, easy to get wrong |
+| Tabular figures | Guaranteed | Must be verified |
+| Weights | Full range | One (regular + italic) |
+| Bundle size | Zero | ~100 KB+ |
+
+`VouchType.heroSerifName` is `nil`, which selects the system serif. Setting it to a bundled family name is a one-line change if Instrument Serif turns out to be materially better — but "materially better" now has to beat a face that costs nothing and can't be misconfigured.
+
+**This doesn't abandon the concept.** `SPEC.md` 6.1's one type risk — a serif on the *figures*, not the headlines — is intact and rendering. Only the specific face is now open.
+
 ---
 
 ## Open — blocking weekend 1
