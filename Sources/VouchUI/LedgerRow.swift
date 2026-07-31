@@ -53,7 +53,9 @@ public struct LedgerRow: View {
                     .font(VouchType.figure).monospacedDigit()
                     .foregroundStyle(theme.inkDim)
                     .lineLimit(1)
-                    .frame(width: 46, alignment: .leading)
+                    // 52, not 46: "30 Jun" is wider than "28 Jul" and truncated
+                    // to "30 J…". Jun/Jan/Feb/Nov/Dec all hit this.
+                    .frame(width: 52, alignment: .leading)
 
                 HStack(spacing: 6) {
                     Text(model.merchant)
