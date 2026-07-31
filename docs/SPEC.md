@@ -950,7 +950,8 @@ Rules:
 
 | Role | Face | Setting |
 |------|------|---------|
-| Figures — hero | **System serif (New York)** | 48/52. See below — Q6b resolved 1 Aug 2026 |
+| **Wordmark / logo** | **Instrument Serif** | Vector asset, never a bundled font — D-027 |
+| Figures — hero | **System serif (New York)** | 48/52. Q6b resolved — D-027 |
 | **Figures — rows** | **SF Pro Text + `.monospacedDigit()`** | 15, right-aligned. **Not SF Mono** — see below |
 | Body / UI | SF Pro Text | 15/22 |
 | Eyebrow / labels | SF Pro Text | 11, uppercase, tracking +0.08em |
@@ -970,22 +971,26 @@ Rendered side by side on real merchant names, SF Mono monospaces `LE TACH VENDIN
 
 **SF Mono keeps exactly one job:** the provenance source line, where a machine-output texture is *correct* because that is literally what it is — the raw line the parser read.
 
-### The hero serif — Q6b resolved in favour of the system face
+### Q6b resolved — measured, not argued (D-027)
 
-**Rendered at 48pt in both modes and it holds.** The worry was that a high-contrast display serif would go thin and weak dark-on-light. The system serif (New York) doesn't, because it's a *text* serif with moderate stroke contrast.
+All three candidates were downloaded, registered at runtime and rendered. The decisive test was `1,111.11` above `8,888.88` with `.monospacedDigit()` applied:
 
-Default to it. **Instrument Serif now has to prove it's better before being bundled**, against a face that costs nothing and can't be misconfigured:
+| Face | Result |
+|------|--------|
+| **New York** | Both lines identical width — **tabular figures confirmed** |
+| **Instrument Serif** | `1,111.11` far narrower than `8,888.88` — **no tabular figures** |
 
-| | System serif | Bundled face |
-|---|---|---|
-| Dynamic Type | Free | Needs `relativeTo:` wiring |
-| Tabular figures | Guaranteed | Must be verified |
-| Weights | Full range | Instrument Serif has one |
-| Bundle size | Zero | ~100 KB+ |
+**Instrument Serif cannot carry figures.** A column would never align, and its `1` is a bare stem with no foot serif — a genuine misread risk at a glance. New York also brings Dynamic Type and a full weight range free, and can't be misconfigured.
 
-`VouchType.heroSerifName` is `nil`, which selects the system serif. Setting it to a bundled family name is a one-line change.
+**But Instrument Serif is the wordmark.** The high contrast and condensed width that disqualify it at 15pt are exactly what make it distinctive at 46pt. Exported as a **vector asset**, so no font ships in the binary and 3.2's zero-bundled-font position holds.
 
-**The concept is unchanged** — a serif on the *figures*, not the headlines (6.1). Only the specific face is now open.
+**The concept is unchanged** — a serif on the *figures*, not the headlines (6.1). The face is now settled.
+
+### The logomark is the proof strip
+
+The violet rule beneath the wordmark does the identifying work — without it the mark reads as a word. So the brand mark and the product's thesis are the same object: a solid violet rule means *vouched*, the same element that sits under the month total.
+
+It is the only logo in this category that can legitimately **change state**.
 
 ### If a face ever is bundled — three requirements
 

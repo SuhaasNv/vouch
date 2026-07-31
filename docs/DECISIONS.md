@@ -484,7 +484,47 @@ Verified by rendering both variants side by side (`vouch-gallery`). The tradeoff
 
 **Consequence:** `SPEC.md` 6.3 needs the mode noted. The toggle belongs in the toolbar, not buried in Settings — it's a reading posture, not a preference.
 
+## D-027 · Instrument Serif is the wordmark; New York is the figures — 1 Aug 2026
+
+**Settled empirically.** All three candidate faces were downloaded from Google Fonts, registered at runtime, and rendered — no guessing from specimens.
+
+### The decisive test: tabular figures
+
+Rendered `1,111.11` above `8,888.88` in both faces, with `.monospacedDigit()` applied:
+
+| Face | Result |
+|------|--------|
+| **New York** | Both lines **identical width**. Tabular figures confirmed |
+| **Instrument Serif** | `1,111.11` is dramatically narrower than `8,888.88`. **No tabular figures** |
+
+**Instrument Serif therefore cannot be used for figures.** A column of amounts would never align, and its `1` is a bare narrow stem with no foot serif — a real misread risk at a glance in a finance app. `SPEC.md` 6.2 makes tabular figures non-negotiable because this app *is* a column of amounts.
+
+**Q6b closes: New York for every figure.** It also brings Dynamic Type and a full weight range free, and cannot be misconfigured.
+
+### But Instrument Serif is the best wordmark of the six
+
+The high stroke contrast and condensed width that make it a liability at 15pt are an **asset at 46pt**. Rendered against Urbanist, Righteous, New York and tracked variants, it is clearly the most distinctive and the most editorial.
+
+**Decision:**
+
+| Use | Face |
+|-----|------|
+| Wordmark / logo | **Instrument Serif** |
+| Hero figures, row figures, everything else | **New York + SF Pro** |
+
+**Export the wordmark as a vector asset, not a bundled font.** A logo renders once at one size — it needs no Dynamic Type, no tabular figures, and no font file in the binary. This gets the distinctive face for free and keeps `SPEC.md` 3.2's zero-bundled-font position intact.
+
+**Righteous is definitively out**, now confirmed against the real face rather than a proxy: chunky and friendly, which is the wrong signal for a product selling certainty. **Urbanist** renders cleanly but says nothing specific — it would be a competent, anonymous mark.
+
+### The logomark is the proof strip
+
+Rendering the options surfaced something better than a font choice: **the violet rule under the wordmark is doing the identifying work.** The variant without it reads as a word, not a mark.
+
+That makes the brand mark and the product's thesis the same object — a solid violet rule literally means *vouched*, the same element that sits under the month total. No competitor's mark can claim that, and it is the only logo that can legitimately **change state**.
+
 ## D-026 · Q6b resolved — the system serif clears the bar — 1 Aug 2026
+
+*Superseded in part by D-027, which settles it against the real faces rather than the system serif alone. The conclusion stands and is now better evidenced.*
 
 **What I checked:** rendered `SGD 3,412.80` and `1,008.75` at 48pt in both Paper and Carbon using the system serif (New York), via `ImageRenderer` at 2× — no Simulator required.
 
